@@ -117,77 +117,29 @@ app.title = "Avocado Sales Dashboard"
 server = app.server  # required for gunicorn / Render
 
 # ── GLOBAL FILTER BAR ─────────────────────────────────────────────────────────
-filter_bar = card([
-    dbc.Row([
-        dbc.Col([
-            html.Label("Year Range", style={"fontWeight":"600","fontSize":"0.78rem",
-                                            "letterSpacing":"0.06em","textTransform":"uppercase",
-                                            "color":TEXT_M,"marginBottom":"8px"}),
-            dcc.RangeSlider(id="g-years", min=YEARS[0], max=YEARS[-1], step=1,
-                            marks={y:str(y) for y in YEARS},
-                            value=[YEARS[0], YEARS[-1]],
-                            tooltip={"placement":"bottom"},
-                            className="gold-slider"),
-        ], md=6),
-        dbc.Col([
-            html.Label("Type", style={"fontWeight":"600","fontSize":"0.78rem",
-                                      "letterSpacing":"0.06em","textTransform":"uppercase",
-                                      "color":TEXT_M,"marginBottom":"8px"}),
-            dbc.Checklist(id="g-types",
-                          options=[{"label":" Conventional","value":"conventional"},
-                                   {"label":" Organic",     "value":"organic"}],
-                          value=["conventional","organic"], inline=True,
-                          inputStyle={"marginRight":"5px","accentColor":GOLD}),
-        ], md=3),
-        dbc.Col([
-            html.Label("Region", style={"fontWeight":"600","fontSize":"0.78rem",
-                                        "letterSpacing":"0.06em","textTransform":"uppercase",
-                                        "color":TEXT_M,"marginBottom":"8px"}),
-            dcc.Dropdown(id="g-region",
-                         options=[{"label":"All Regions","value":"ALL"}] +
-                                 [{"label":r,"value":r} for r in REGIONS],
-                         value="ALL", clearable=False,
-                         style={"fontSize":"0.85rem"}),
-        ], md=3),
-    ]),
-], style={"marginBottom":"0","borderRadius":"0","boxShadow":"none",
-          "borderBottom":f"1px solid #e8e4dc","background":CREAM,"padding":"20px 32px"})
-
-# ── TABS ──────────────────────────────────────────────────────────────────────
+# ── TAB STYLES ────────────────────────────────────────────────────────────────
 tab_style = {"padding":"10px 24px","fontSize":"0.82rem","fontWeight":"600",
              "letterSpacing":"0.05em","textTransform":"uppercase",
              "color":TEXT_M,"border":"none","borderBottom":"3px solid transparent",
              "background":"transparent","cursor":"pointer"}
 tab_sel   = {**tab_style,"color":NAV,"borderBottom":f"3px solid {GOLD}"}
 
-tabs = dcc.Tabs(id="main-tabs", value="overview",
-    children=[
-        dcc.Tab(label="Overview",        value="overview",    style=tab_style, selected_style=tab_sel),
-        dcc.Tab(label="Seasonality",     value="season",      style=tab_style, selected_style=tab_sel),
-        dcc.Tab(label="Regional",        value="regional",    style=tab_style, selected_style=tab_sel),
-        dcc.Tab(label="Holiday Spikes",  value="holidays",    style=tab_style, selected_style=tab_sel),
-        dcc.Tab(label="Executive Brief", value="exec",        style=tab_style, selected_style=tab_sel),
-    ],
-    style={"background":CREAM,"borderBottom":f"1px solid #e0dbd0",
-           "paddingLeft":"20px","fontFamily":"DM Sans, sans-serif"},
-)
-
 # ── LAYOUT ────────────────────────────────────────────────────────────────────
 app.layout = html.Div([
 
-    # ── HEADER ────────────────────────────────────────────────────────────────
+    # ── HEADER ──────────────────────────────────────────────────────────────
     html.Div([
         dbc.Container([
             dbc.Row([
                 dbc.Col([
                     html.Div([
-                        html.Span("🥑", style={"fontSize":"1.8rem","marginRight":"12px"}),
+                        html.Span("\U0001f951", style={"fontSize":"1.8rem","marginRight":"12px"}),
                         html.Span("Avocado Sales Dashboard",
                                   style={"fontFamily":"Cormorant Garamond, Georgia, serif",
                                          "fontSize":"1.6rem","fontWeight":"700",
                                          "color":"white","letterSpacing":"0.02em"}),
                     ], style={"display":"flex","alignItems":"center"}),
-                    html.Div("GreenGrocer · Strategic Intelligence · 2015–2023",
+                    html.Div("GreenGrocer \u00b7 Strategic Intelligence \u00b7 2015\u20132023",
                              style={"color":GOLD_LT,"fontSize":"0.75rem",
                                     "letterSpacing":"0.12em","marginTop":"4px",
                                     "fontFamily":"DM Sans, sans-serif","fontWeight":"300"}),
@@ -200,8 +152,54 @@ app.layout = html.Div([
     ], style={"background":f"linear-gradient(135deg, {NAV} 0%, {NAV2} 100%)",
               "padding":"20px 32px","boxShadow":"0 4px 20px rgba(10,22,40,0.3)"}),
 
-    filter_bar,
-    tabs,
+    # ── FILTER BAR ────────────────────────────────────────────────────────────
+    html.Div([
+        dbc.Row([
+            dbc.Col([
+                html.Label("Year Range", style={"fontWeight":"600","fontSize":"0.78rem",
+                                                "letterSpacing":"0.06em","textTransform":"uppercase",
+                                                "color":TEXT_M,"marginBottom":"8px"}),
+                dcc.RangeSlider(id="g-years", min=YEARS[0], max=YEARS[-1], step=1,
+                                marks={y:str(y) for y in YEARS},
+                                value=[YEARS[0], YEARS[-1]],
+                                tooltip={"placement":"bottom"}),
+            ], md=6),
+            dbc.Col([
+                html.Label("Type", style={"fontWeight":"600","fontSize":"0.78rem",
+                                          "letterSpacing":"0.06em","textTransform":"uppercase",
+                                          "color":TEXT_M,"marginBottom":"8px"}),
+                dbc.Checklist(id="g-types",
+                              options=[{"label":" Conventional","value":"conventional"},
+                                       {"label":" Organic","value":"organic"}],
+                              value=["conventional","organic"], inline=True,
+                              inputStyle={"marginRight":"5px"}),
+            ], md=3),
+            dbc.Col([
+                html.Label("Region", style={"fontWeight":"600","fontSize":"0.78rem",
+                                            "letterSpacing":"0.06em","textTransform":"uppercase",
+                                            "color":TEXT_M,"marginBottom":"8px"}),
+                dcc.Dropdown(id="g-region",
+                             options=[{"label":"All Regions","value":"ALL"}] +
+                                     [{"label":r,"value":r} for r in REGIONS],
+                             value="ALL", clearable=False,
+                             style={"fontSize":"0.85rem"}),
+            ], md=3),
+        ]),
+    ], style={"borderBottom":f"1px solid #e8e4dc","background":CREAM,"padding":"20px 32px"}),
+
+    # ── TABS ──────────────────────────────────────────────────────────────────
+    dcc.Tabs(id="main-tabs", value="overview",
+        children=[
+            dcc.Tab(label="Overview",        value="overview",  style=tab_style, selected_style=tab_sel),
+            dcc.Tab(label="Seasonality",     value="season",    style=tab_style, selected_style=tab_sel),
+            dcc.Tab(label="Regional",        value="regional",  style=tab_style, selected_style=tab_sel),
+            dcc.Tab(label="Holiday Spikes",  value="holidays",  style=tab_style, selected_style=tab_sel),
+            dcc.Tab(label="Executive Brief", value="exec",      style=tab_style, selected_style=tab_sel),
+        ],
+        style={"background":CREAM,"borderBottom":f"1px solid #e0dbd0",
+               "paddingLeft":"20px","fontFamily":"DM Sans, sans-serif"},
+    ),
+
 
     # ── TAB CONTENT ───────────────────────────────────────────────────────────
     html.Div(id="tab-content",
