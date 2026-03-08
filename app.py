@@ -101,8 +101,8 @@ def compute_kpis(df):
     org_15    = org[org["year"]==org["year"].min()]["total_volume"].sum()
     org_21    = org[org["year"]==2021]["total_volume"].sum()
     org_gr    = ((org_21-org_15)/org_15*100) if org_15>0 else 0
-    return dict(median_p=f"${median_p:.2f}", premium=f"+${premium:.2f}",
-                top_reg=top_reg, peak_mon=peak_mon, org_gr=f"+{org_gr:.0f}%")
+    return dict(median_price=f"${median_p:.2f}", organic_premium=f"+${premium:.2f}",
+                top_region=top_reg, peak_month=peak_mon, org_growth=f"+{org_gr:.0f}%")
 
 # ── EXTERNAL FONTS ────────────────────────────────────────────────────────────
 EXT_CSS = [
